@@ -12,5 +12,4 @@ using Dummy_Console_App.Helper;
 //PdfHelper.Instance.SaveImageAsPdf(path, path1, 1000, true);
 //PdfHelper.Instance.SavePdfAsImage();
 
-DigitalSignatureHelper signatureHelper = new DigitalSignatureHelper();
-
+DigitalSignatureHelper.start();

@@ -35,24 +35,36 @@ namespace Dummy_Console_App.Helper
             return isValid;
         }
 
-        public static void Main(string[] args)
+        public static void start()
         {
             try
             {
+                byte[] signature;
                 // Load the certificate from a PFX file
-                string certificatePath = @"C:\\Users\\admin\\Desktop\\shivam.pfx";
-                string certificatePassword = "shivam";
-                X509Certificate2 certificate = new X509Certificate2(certificatePath, certificatePassword);
+                string certificatePath = @"C:\\Users\\admin\\Downloads\\rkj_seil_capricorn.pfx";
+                string certificatePassword = "rkjain";
+                X509Certificate2 privateCert = new X509Certificate2(certificatePath, certificatePassword, X509KeyStorageFlags.Exportable);
+                using (RSA privateKey = privateCert.GetRSAPrivateKey())
+                {
+                    byte[] data = Encoding.UTF8.GetBytes("Data to be signed");
 
-                // Data to be signed
-                byte[] dataToSign = System.Text.Encoding.UTF8.GetBytes("Hello, this is the data to be signed.");
+                    // Sign the data using SHA256
+                    signature = privateKey.SignData(data, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+                    var signData = Convert.ToBase64String(signature);
+                    // Verify the signature
 
-                // Create a digital signature
-                byte[] signature = SignData(dataToSign, certificate);
+                    bool isValid = privateKey.VerifyData(data, signature, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+                    Console.WriteLine("Is Signature Valid? " + isValid);
+                }
 
-                // Verification
-                bool isValid = VerifyData(dataToSign, signature, certificate);
-                Console.WriteLine("Signature Verification Result: " + isValid);
+                using (RSA publickey = privateCert.GetRSAPublicKey())
+                {
+                    byte[] data = Encoding.UTF8.GetBytes("Data to be signed");
+
+                    bool isValid = publickey.VerifyData(data, signature, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+                    Console.WriteLine("Is Signature Valid? " + isValid);
+                }
+
             }
             catch (Exception ex)
             {
