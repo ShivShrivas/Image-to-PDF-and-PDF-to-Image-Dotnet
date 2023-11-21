@@ -11,5 +11,6 @@ using Dummy_Console_App.Helper;
 //string path1 = AppDomain.CurrentDomain.BaseDirectory.Replace("bin\\Debug\\net6.0\\", "") + "files\\newFile.pdf";
 //PdfHelper.Instance.SaveImageAsPdf(path, path1, 1000, true);
 //PdfHelper.Instance.SavePdfAsImage();
+PublicKeyHelper.getPublicKey();
 
-DigitalSignatureHelper.start();
+//AzureCoginetiveHelper.AnalyzeImage();

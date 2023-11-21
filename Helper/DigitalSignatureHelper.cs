@@ -35,31 +35,33 @@ namespace Dummy_Console_App.Helper
             return isValid;
         }
 
-        public static void start()
+        public static void start()   
         {
             try
             {
                 byte[] signature;
+                byte[] data;
                 // Load the certificate from a PFX file
                 string certificatePath = @"C:\\Users\\admin\\Downloads\\rkj_seil_capricorn.pfx";
-                string certificatePassword = "rkjain";
+                string certificatePassword = "rkjain"; 
                 X509Certificate2 privateCert = new X509Certificate2(certificatePath, certificatePassword, X509KeyStorageFlags.Exportable);
                 using (RSA privateKey = privateCert.GetRSAPrivateKey())
                 {
-                    byte[] data = Encoding.UTF8.GetBytes("Data to be signed");
+                     data = Encoding.UTF8.GetBytes("Data to be signedw");
 
                     // Sign the data using SHA256
                     signature = privateKey.SignData(data, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
                     var signData = Convert.ToBase64String(signature);
                     // Verify the signature
 
-                    bool isValid = privateKey.VerifyData(data, signature, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
-                    Console.WriteLine("Is Signature Valid? " + isValid);
+                    bool isValids = privateKey.VerifyData(data, signature, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+                    Console.WriteLine("Is Signature Valid? " + isValids);
                 }
 
                 using (RSA publickey = privateCert.GetRSAPublicKey())
                 {
-                    byte[] data = Encoding.UTF8.GetBytes("Data to be signed");
+
+                    data = Encoding.UTF8.GetBytes("Data to be signedw");
 
                     bool isValid = publickey.VerifyData(data, signature, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
                     Console.WriteLine("Is Signature Valid? " + isValid);
@@ -70,6 +72,42 @@ namespace Dummy_Console_App.Helper
             {
                 Console.WriteLine("Exception: " + ex.Message);
             }
+        }
+
+
+        public static void ditalSign()
+    {
+        string pfxFilePath = "D:\\cert\\rkj_seil_capricorn.pfx";
+        string pfxPassword = "rkjain";
+
+             X509Certificate2 certificate = new X509Certificate2(pfxFilePath, pfxPassword, X509KeyStorageFlags.Exportable);
+
+        // Get the private key from the certificate
+        using (RSA privateKey = certificate.GetRSAPrivateKey())
+        {
+            // Create data to sign
+            string dataToSign = "Hello, this is tha tujhfufholuigo sign.";
+
+            // Convert the data to bytes
+            byte[] dataBytes = Encoding.UTF8.GetBytes(dataToSign);
+
+            // Create an RSAPKCS1SignatureFormatter object and set the hashing algorithm to SHA-256
+            RSAPKCS1SignatureFormatter signatureFormatter = new RSAPKCS1SignatureFormatter(privateKey);
+            signatureFormatter.SetHashAlgorithm("SHA256");
+
+            // Compute the signature
+            byte[] signature = signatureFormatter.CreateSignature(dataBytes);
+
+            Console.WriteLine("Digital Signature:");
+            Console.WriteLine(Convert.ToBase64String(signature));
+
+            // Verify the signature (optional)
+            RSAPKCS1SignatureDeformatter signatureDeformatter = new RSAPKCS1SignatureDeformatter(privateKey);
+            signatureDeformatter.SetHashAlgorithm("SHA256");
+
+            bool signatureIsValid = signatureDeformatter.VerifySignature(dataBytes, signature);
+            Console.WriteLine("Signature is valid: " + signatureIsValid);
+        }
         }
     }
 }

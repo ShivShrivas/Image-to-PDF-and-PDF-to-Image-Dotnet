@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Azure.AI.Vision.ImageAnalysis" Version="0.13.0-beta.1" />
     <PackageReference Include="FirebaseAdmin" Version="2.4.0" />
     <PackageReference Include="iTextSharp" Version="5.5.13.3" />
     <PackageReference Include="PDFium.x86" Version="4648.0.0" />
